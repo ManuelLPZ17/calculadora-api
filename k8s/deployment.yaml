@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculadora-api
+  labels:
+    app: calculadora-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: calculadora-api
+  template:
+    metadata:
+      labels:
+        app: calculadora-api
+    spec:
+      containers:
+        - name: calculadora-api
+          image: ManuelLPZ17/calculadora-api:latest
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
