@@ -16,26 +16,14 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
+      - name: Instalar kubectl
+        uses: azure/setup-kubectl@v3
+
       - name: Configurar kubectl
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG_B64 }}" | base64 -d > ~/.kube/config
           chmod 600 ~/.kube/config
-
-      - name: Instalar kubectl
-        uses: azure/setup-kubectl@v3
-
-      - name: Obtener versión del último tag
-        id: tag
-        run: |
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "latest")
-          echo "VERSION=$TAG" >> $GITHUB_OUTPUT
-
-      - name: Actualizar imagen en deployment
-        run: |
-          kubectl set image deployment/calculadora-api \
-            calculadora-api=${{ secrets.DOCKERHUB_USERNAME }}/calculadora-api:${{ steps.tag.outputs.VERSION }} \
-            --record || true
 
       - name: Aplicar manifests de Kubernetes
         run: |
@@ -43,4 +31,4 @@ jobs:
           kubectl apply -f k8s/service.yaml
 
       - name: Verificar rollout
-        run: kubectl rollout status deployment/calculadora-api --timeout=120s
+        run: kubectl rollout status deployment/calculadora-api --timeout=180s
