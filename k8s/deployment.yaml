@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: calculadora-api
-          image: ManuelLPZ17/calculadora-api:latest
+          image: manuellpz17/calculadora-api:latest
           ports:
             - containerPort: 8000
           resources:
